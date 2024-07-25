@@ -5,6 +5,7 @@ import Homepage from './Homepage';
 import Creategame from './Creategame';
 import Joingame from './Joingame';
 import Game from './Game';
+import Game2 from './Game2'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -19,8 +20,8 @@ function App() {
             <Route path="/homepage" element={<Homepage />} />
             <Route path='/Creategame' element={<Creategame/>}/>
             <Route path='/Joingame' element={<Joingame/>}/>
-            <Route path='/game' element={<Game/>}/>
-          </Routes>
+            <Route path="/Game/:username/:gameid/:role" element={<Game />} /> 
+            <Route path="/Game2/:username/:gameid/:role" element={<Game2/>} />          </Routes>
         </header>
       </div>
     </Router>

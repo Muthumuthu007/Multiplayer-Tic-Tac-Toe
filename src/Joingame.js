@@ -21,7 +21,7 @@ function Joingame() {
       console.log(response.data);
       if (response.data.message === 'Joined game') {
         setError('');
-        navigate(`/Game`);
+        navigate(`/Game/${username}/${gameId}/O`); // Use 'O' for Player 2
       } else {
         setError('Failed to join game');
       }

@@ -5,7 +5,7 @@ import './App.css';
 
 const BASE_URL = 'http://3.139.54.170:8000';
 
-function Game() {
+function Game2() {
   const { username, gameid } = useParams();
   const [error, setError] = useState('');
   const [currentPlayer, setCurrentPlayer] = useState('');
@@ -16,9 +16,12 @@ function Game() {
   ]);
   const [message, setMessage] = useState('');
   const [winner, setWinner] = useState('');
+  const [shouldFetchGameState, setShouldFetchGameState] = useState(true);
 
   useEffect(() => {
-    const fetchGameState = async () => {
+    const interval = setInterval(async () => {
+      if (!shouldFetchGameState) return;
+
       try {
         const response = await axios.post(
           `${BASE_URL}/get_game_state`,
@@ -47,12 +50,10 @@ function Game() {
         console.error('Error fetching game status:', error);
         setError('Error fetching game status');
       }
-    };
-
-    const interval = setInterval(fetchGameState, 5000);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [gameid, username]);
+  }, [gameid, username, shouldFetchGameState]);
 
   const parseBoard = (board) => {
     const newMatrix = [];
@@ -69,7 +70,10 @@ function Game() {
   };
 
   const handleClick = async (r, c) => {
-    
+    if (matrix[r][c] !== '') {
+      setError('Invalid move');
+      return;
+    }
 
     const moveIndex = r * 3 + c;
     const payload = {
@@ -91,11 +95,7 @@ function Game() {
         setMessage(response.data.message);
         setWinner(response.data.winner);
         setError('');
-
-        // Check if the game has ended, if not continue fetching game state
-        if (response.data.winner === 'None') {
-          setTimeout(() => fetchGameState(), 5000);
-        }
+        setShouldFetchGameState(true);
       } else {
         setError(response.data.message);
       }
@@ -108,38 +108,8 @@ function Game() {
         setError('An error occurred');
       }
     }
-  };
 
-  const fetchGameState = async () => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/get_game_state`,
-        { game_id: gameid },
-        { headers: { 'Content-Type': 'application/json' } }
-      );
-
-      console.log(response.data);
-      const { board, current_player, message, winner } = response.data;
-      const newMatrix = parseBoard(board);
-      setMatrix(newMatrix);
-      setCurrentPlayer(current_player);
-      setMessage(message);
-      setWinner(winner);
-
-      if (winner === 'None') {
-        if (current_player === username) {
-          setMessage("It's your turn");
-        } else {
-          setMessage("Waiting for opponent's move");
-        }
-        setTimeout(() => fetchGameState(), 5000);
-      } else {
-        setMessage(`Game ended. Winner: ${winner}`);
-      }
-    } catch (error) {
-      console.error('Error fetching game status:', error);
-      setError('Error fetching game status');
-    }
+    setShouldFetchGameState(false);
   };
 
   return (
@@ -168,4 +138,4 @@ function Game() {
   );
 }
 
-export default Game;
+export default Game2;

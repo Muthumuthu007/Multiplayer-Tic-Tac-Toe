@@ -9,11 +9,9 @@ function Creategame() {
   const [gameId, setGameId] = useState('');
   const navigate = useNavigate();
 
-  const game = async (e) => {
+  const createGame = async (e) => {
     e.preventDefault();
-    const payload = {
-      username: username
-    };
+    const payload = { username };
 
     try {
       const response = await axios.post('http://3.139.54.170:8000/create_game', payload);
@@ -34,13 +32,13 @@ function Creategame() {
   };
 
   const handleStart = () => {
-    navigate(`/Game`);
+    navigate(`/Game/${username}/${gameId}/X`);
   };
 
   return (
     <div>
       <h1>Create Game</h1>
-      <form onSubmit={game}>
+      <form onSubmit={createGame}>
         <label>
           Username:
           <input
