@@ -147,6 +147,8 @@ function Game() {
       <div className="xoxheader xoxalignCenter">Tic Tac Toe</div>
       <div className="xoxalignCenter xoxboard">
         <div className="xoxgameBoard">
+        <div>You :{username}</div><br></br>
+
           {matrix.map((row, rIndex) => (
             <div className="xoxrow" key={rIndex}>
               {row.map((cell, cIndex) => (
@@ -159,10 +161,12 @@ function Game() {
                 </div>
               ))}
             </div>
-          ))}
-        </div>
-        {error && <div className="error">{error}</div>}
+          ))}<br></br>
+          {error && <div className="error">{error}</div>}
         <div className="message">{message}</div>
+        </div>
+        <br></br>
+        
       </div>
     </div>
   );
